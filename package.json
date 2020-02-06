@@ -1,0 +1,30 @@
+{
+  "name": "get-licitacoes",
+  "version": "1.0.0",
+  "description": "spider para adquirir licitacoes nos sites do governo de aracaju",
+  "main": "get-licitacoes.js",
+  "scripts": {
+    "test": "node --tls-min-v1.0 get-licitacoes.js "
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/decieve/get-licitacoes.git"
+  },
+  "keywords": [
+    "crawler",
+    "aracaju",
+    "licitacoes"
+  ],
+  "author": "decieve",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/decieve/get-licitacoes/issues"
+  },
+  "homepage": "https://github.com/decieve/get-licitacoes#readme",
+  "dependencies": {
+    "cheerio": "^1.0.0-rc.3",
+    "phantomjs-prebuilt": "^2.1.16",
+    "puppeteer": "^2.1.1",
+    "request": "^2.88.0"
+  }
+}
