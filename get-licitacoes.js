@@ -21,19 +21,23 @@ async function main (url) {
 
   let texts = await page.evaluate(() => {
     let data = [];
-    let i = 0;
-    let elements = document.querySelectorAll('tr.gridrowinner-white border-bottom-dotted');
-    elements.forEach((element,i) =>{
+    let grid = document.querySelector('#PlaceHolder_ucConsultaLicitacoes_Grid');
+    let rows = grid.querySelectorAll('tr.gridrowinner-white.border-bottom-dotted');
+    for (let i=0;i<rows.length;i++){
         json = {};
-        try{
-             json.modalidade = element.querySelector('PlaceHolder_ucConsultaLicitacoes_Grid_lnkModalidade_'+i).textContent;
-             let edital = element.querySelector('PlaceHolder_ucConsultaLicitacoes_Grid_lnkEdital_'+i).textContent;
-            
-        }catch(exception){
-            
-        }
-    });
-    return elements;
+        json.modalidade =rows[i].querySelector('a#PlaceHolder_ucConsultaLicitacoes_Grid_lnkModalidade_'+i).textContent;
+        let edital = rows[i].querySelector('a#PlaceHolder_ucConsultaLicitacoes_Grid_lnkEdital_'+i).textContent;
+
+        var reg = /([\s\S]+ -)/g;
+        let str = edital.split(reg);
+        var reg2 = /\-/g;
+        json.descricao = str.pop().trim();
+        json.numero_edital = str.pop().replace(reg2,'').trim();
+        json.numero_edital = str.pop().replace(reg2,'').trim()+json.numero_edital;
+        
+        data.push(json);
+    }
+    return data;
   });
   console.log(texts);
   html = await page.content();
