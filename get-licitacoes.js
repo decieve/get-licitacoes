@@ -1,6 +1,13 @@
 const puppeteer = require('puppeteer');
+const mysql = require('mysql');
 
-async function licitacoes (url) {
+var con = mysql.createConnection({
+  host: "localhost",
+  user: "licitacao_user",
+  password: "palachinho",
+  database: "licitacoes"
+});
+async function getLicitacoes (url) {
   const browser = await puppeteer.launch({headless: false});
   const page = await browser.newPage();
   await page.goto(url, {waitUntil: 'networkidle0'});
@@ -28,7 +35,7 @@ async function licitacoes (url) {
           var reg2 = /\-/g;
           json.descricao = str.pop().trim();
           json.numero_edital = str.pop().replace(reg2,'').trim();
-          json.numero_edital = str.pop().replace(reg2,'').trim()+json.numero_edital;
+          json.numero_edital = str.pop().replace(reg2,'').trim()+json.numero_edital.trim();
           var reg3 = /([0-9]+)\//g;
           if(json.abertura.includes('de')){
             var reg4 = /([\s\S]+)d/;
@@ -139,7 +146,25 @@ async function licitacoes (url) {
   }
   console.log(licitacoes);
   await browser.close();
-  return licitacoes;
+  con.connect((err) => {
+        if (err) throw err;
+        console.log("Conectado");                    
+  });
+
+    for(let i = 0; i< licitacoes.length;i++){
+        let sql =  "INSERT INTO licitacoes (codigo) VALUE ('"+licitacoes[i].numero_edital+"')";
+        con.query(sql, function (err) {
+            if (err) throw err;
+            console.log("1 record inserted");
+        });
+  }
+
+  con.end((err)=>{
+    if(err) throw err;
+    console.log("Finalizando");
+  });
 }
 
-licitacoes('https://www.aracajucompras.se.gov.br/portal/');
+module.exports = getLicitacoes;
+
+getLicitacoes('https://www.aracajucompras.se.gov.br/portal/default.aspx');
