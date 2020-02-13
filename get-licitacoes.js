@@ -1,12 +1,10 @@
 const puppeteer = require('puppeteer');
-const mysql = require('mysql');
 
-var con = mysql.createConnection({
-  host: "localhost",
-  user: "licitacao_user",
-  password: "palachinho",
-  database: "licitacoes"
-});
+
+
+
+
+
 async function getLicitacoes (url) {
   const browser = await puppeteer.launch({headless: false});
   const page = await browser.newPage();
@@ -146,25 +144,7 @@ async function getLicitacoes (url) {
   }
   console.log(licitacoes);
   await browser.close();
-  con.connect((err) => {
-        if (err) throw err;
-        console.log("Conectado");                    
-  });
-
-    for(let i = 0; i< licitacoes.length;i++){
-        let sql =  "INSERT INTO licitacoes (codigo) VALUE ('"+licitacoes[i].numero_edital+"')";
-        con.query(sql, function (err) {
-            if (err) throw err;
-            console.log("1 record inserted");
-        });
-  }
-
-  con.end((err)=>{
-    if(err) throw err;
-    console.log("Finalizando");
-  });
+  return licitacoes; 
 }
 
 module.exports = getLicitacoes;
-
-getLicitacoes('https://www.aracajucompras.se.gov.br/portal/default.aspx');

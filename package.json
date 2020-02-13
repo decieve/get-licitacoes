@@ -4,7 +4,7 @@
   "description": "spider para adquirir licitacoes nos sites do governo de aracaju",
   "main": "get-licitacoes.js",
   "scripts": {
-    "test": "node --tls-min-v1.0 get-licitacoes.js "
+    "test": "node --tls-min-v1.0 input-banco.js "
   },
   "repository": {
     "type": "git",
