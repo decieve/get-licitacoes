@@ -1,10 +1,5 @@
 const puppeteer = require('puppeteer');
 
-
-
-
-
-
 async function getLicitacoes (url) {
   const browser = await puppeteer.launch({headless: false});
   const page = await browser.newPage();
@@ -15,7 +10,7 @@ async function getLicitacoes (url) {
   await page.click('a[href="#tab_licitacoes"]');
   await page.waitFor(500);
   while(a<10){
-    let zap = await page.evaluate(() => {
+    let licitacoes_pagina = await page.evaluate(() => {
       let data = [];
       let grid = document.querySelector('#PlaceHolder_ucConsultaLicitacoes_Grid');
       let rows = grid.querySelectorAll('tr.border-bottom-dotted');
@@ -135,14 +130,13 @@ async function getLicitacoes (url) {
         }
         return data;
       });
-      licitacoes = licitacoes.concat(zap);
+      licitacoes = licitacoes.concat(licitacoes_pagina);
       a++;
       console.log('navegando pagina : ' + a);
       let s = a.toString();
       await page.click('#PlaceHolder_ucConsultaLicitacoes_lstPaginacao1_lblPag_'+s);
       await page.waitFor(1000);
   }
-  console.log(licitacoes);
   await browser.close();
   return licitacoes; 
 }
